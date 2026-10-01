@@ -11,9 +11,13 @@ const FILTERS = [
 
 export default function InvoicesPage() {
   const [activeFilter, setActiveFilter] = useState('toutes')
+  const [searchQuery, setSearchQuery] = useState('')
 
-  const filteredInvoices =
-    activeFilter === 'toutes' ? invoices : invoices.filter((f) => f.status === activeFilter)
+  const filteredInvoices = invoices.filter(
+    (f) =>
+      (activeFilter === 'toutes' || f.status === activeFilter) &&
+      f.client.toLowerCase().includes(searchQuery.toLowerCase()),
+  )
 
   return (
     <section className="mx-auto max-w-6xl px-6 py-12">
@@ -22,6 +26,14 @@ export default function InvoicesPage() {
       <p className="mt-2 max-w-xl text-slate-ink">
         Suivez l'état de vos factures émises et anticipez vos encaissements.
       </p>
+
+      <input
+        type="text"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        placeholder="Rechercher un client…"
+        className="mt-8 w-full rounded border border-line bg-white px-4 py-2 text-sm text-navy placeholder:text-slate-ink focus:outline-none focus:ring-2 focus:ring-blue"
+      />
 
       <div className="mt-8 flex gap-1 border-b border-line">
         {FILTERS.map((filter) => (
